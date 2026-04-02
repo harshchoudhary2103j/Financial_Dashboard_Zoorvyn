@@ -9,6 +9,8 @@ import org.springframework.data.domain.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import com.harsh.FinanceDashboard.Finance.Dashboard.enums.*;
 import com.harsh.FinanceDashboard.Finance.Dashboard.entities.*;
 import com.harsh.FinanceDashboard.Finance.Dashboard.exception.ResourceNotFoundException;
@@ -77,5 +79,12 @@ public class FinancialRecordService {
         FinancialRecordResponseDTO dto = modelMapper.map(record, FinancialRecordResponseDTO.class);
         dto.setCreatedByName(record.getCreatedBy().getName());
         return dto;
+    }
+    // Admin only - view all soft deleted records
+    public List<FinancialRecordResponseDTO> getDeletedRecords() {
+        return financialRecordRepository.findAllDeleted()
+                .stream()
+                .map(this::mapToResponseDTO)
+                .toList();
     }
 }

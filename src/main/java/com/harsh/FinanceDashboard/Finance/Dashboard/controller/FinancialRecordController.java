@@ -16,6 +16,8 @@ import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/records")
 @RequiredArgsConstructor
@@ -67,5 +69,11 @@ public class FinancialRecordController {
     public ResponseEntity<Void> deleteRecord(@PathVariable Long id) {
         financialRecordService.deleteRecord(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/deleted")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<FinancialRecordResponseDTO>> getDeletedRecords() {
+        return ResponseEntity.ok(financialRecordService.getDeletedRecords());
     }
 }

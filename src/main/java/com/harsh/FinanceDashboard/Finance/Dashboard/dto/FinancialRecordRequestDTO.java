@@ -22,7 +22,7 @@ public class FinancialRecordRequestDTO {
     @NotNull(message = "Type is required")
     private TransactionType type;
 
-    @NotBlank(message = "Category is required")
+    @NotNull(message = "Category is required")
     private Category category;
 
     @NotNull(message = "Date is required")

@@ -39,12 +39,23 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
     List<Object[]> sumByCategory();
 
     // Monthly trends
-    @Query("SELECT MONTH(f.date), YEAR(f.date), f.type, SUM(f.amount) " +
+    @Query("SELECT EXTRACT(MONTH FROM f.date), EXTRACT(YEAR FROM f.date), f.type, SUM(f.amount) " +
             "FROM FinancialRecord f WHERE f.isDeleted = false " +
-            "GROUP BY YEAR(f.date), MONTH(f.date), f.type " +
-            "ORDER BY YEAR(f.date), MONTH(f.date)")
+            "GROUP BY EXTRACT(YEAR FROM f.date), EXTRACT(MONTH FROM f.date), f.type " +
+            "ORDER BY EXTRACT(YEAR FROM f.date), EXTRACT(MONTH FROM f.date)")
     List<Object[]> monthlyTrends();
+
+    // Category wise totals per month
+    @Query("SELECT EXTRACT(MONTH FROM f.date), EXTRACT(YEAR FROM f.date), f.category, SUM(f.amount) " +
+            "FROM FinancialRecord f WHERE f.isDeleted = false " +
+            "GROUP BY EXTRACT(YEAR FROM f.date), EXTRACT(MONTH FROM f.date), f.category " +
+            "ORDER BY EXTRACT(YEAR FROM f.date), EXTRACT(MONTH FROM f.date)")
+    List<Object[]> sumByCategoryPerMonth();
 
     // Recent records
     List<FinancialRecord> findTop10ByIsDeletedFalseOrderByCreatedAtDesc();
+
+    // Get all soft deleted records
+    @Query("SELECT f FROM FinancialRecord f WHERE f.isDeleted = true")
+    List<FinancialRecord> findAllDeleted();
 }
