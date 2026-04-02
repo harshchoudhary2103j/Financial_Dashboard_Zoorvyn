@@ -2,6 +2,7 @@ package com.harsh.FinanceDashboard.Finance.Dashboard.security;
 
 
 import com.harsh.FinanceDashboard.Finance.Dashboard.entities.User;
+import com.harsh.FinanceDashboard.Finance.Dashboard.service.UserService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

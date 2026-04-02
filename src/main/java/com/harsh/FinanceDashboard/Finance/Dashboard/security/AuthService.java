@@ -2,6 +2,7 @@ package com.harsh.FinanceDashboard.Finance.Dashboard.security;
 
 import com.harsh.FinanceDashboard.Finance.Dashboard.dto.LoginDTO;
 import com.harsh.FinanceDashboard.Finance.Dashboard.dto.SignUpRequestDTO;
+import com.harsh.FinanceDashboard.Finance.Dashboard.dto.UserDTO;
 import com.harsh.FinanceDashboard.Finance.Dashboard.entities.User;
 import com.harsh.FinanceDashboard.Finance.Dashboard.enums.Role;
 import com.harsh.FinanceDashboard.Finance.Dashboard.enums.UserStatus;
@@ -22,8 +23,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private  final ModelMapper modelMapper;
 
-    public void signup(SignUpRequestDTO signUpRequestDTO) {
+    public UserDTO signup(SignUpRequestDTO signUpRequestDTO) {
         boolean exists = userRepository.existsByEmail(signUpRequestDTO.getEmail());
         if (exists) {
             throw new RuntimeException("User already exists with email: " + signUpRequestDTO.getEmail());
@@ -38,6 +40,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(newUser);
+        return modelMapper.map(newUser,UserDTO.class);
     }
 
     public String[] login(LoginDTO loginDTO) {
