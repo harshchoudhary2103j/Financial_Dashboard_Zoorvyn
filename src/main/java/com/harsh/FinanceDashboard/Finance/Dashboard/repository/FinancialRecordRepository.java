@@ -15,7 +15,6 @@ import com.harsh.FinanceDashboard.Finance.Dashboard.enums.*;
 @Repository
 public interface FinancialRecordRepository extends JpaRepository<FinancialRecord, Long> {
 
-    // Fetch all non-deleted records with filters
     @Query("SELECT f FROM FinancialRecord f WHERE f.isDeleted = false " +
             "AND (:type IS NULL OR f.type = :type) " +
             "AND (:category IS NULL OR f.category = :category) " +
@@ -23,7 +22,7 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
             "AND (:endDate IS NULL OR f.date <= :endDate)")
     Page<FinancialRecord> findAllWithFilters(
             @Param("type") TransactionType type,
-            @Param("category") String category,
+            @Param("category") Category category,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable

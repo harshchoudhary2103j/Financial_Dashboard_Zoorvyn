@@ -29,7 +29,7 @@ public class FinancialRecord {
     private TransactionType type;
 
     @Column(nullable = false)
-    private String category;
+    private Category category;
 
     @Column(nullable = false)
     private LocalDate date;
