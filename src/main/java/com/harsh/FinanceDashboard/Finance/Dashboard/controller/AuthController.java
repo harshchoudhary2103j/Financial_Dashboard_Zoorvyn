@@ -13,21 +13,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Signup, Login and Refresh token APIs")
 public class AuthController {
 
     private final AuthService authService;
-
+    @Operation(summary = "Register a new user", description = "Default role is VIEWER")
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> signup(@RequestBody SignUpRequestDTO signUpRequestDTO) {
         return new ResponseEntity<>(authService.signup(signUpRequestDTO), HttpStatus.CREATED);
     }
-
+    @Operation(summary = "Login user", description = "Returns access token, sets refresh token in cookie")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO,
                                                   HttpServletRequest request,
@@ -38,7 +40,7 @@ public class AuthController {
         response.addCookie(cookie);
         return ResponseEntity.ok(new LoginResponseDTO(tokens[0]));
     }
-
+    @Operation(summary = "Refresh access token", description = "Uses refresh token from cookie")
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponseDTO> refresh(HttpServletRequest request) {
         String refreshToken = Arrays.stream(request.getCookies())

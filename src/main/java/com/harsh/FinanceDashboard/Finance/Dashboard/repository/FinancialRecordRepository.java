@@ -58,4 +58,13 @@ public interface FinancialRecordRepository extends JpaRepository<FinancialRecord
     // Get all soft deleted records
     @Query("SELECT f FROM FinancialRecord f WHERE f.isDeleted = true")
     List<FinancialRecord> findAllDeleted();
+
+    @Query("SELECT f FROM FinancialRecord f WHERE f.isDeleted = false " +
+            "AND (:keyword IS NULL OR " +
+            "LOWER(f.notes) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR CAST(f.category AS string) LIKE UPPER(CONCAT('%', :keyword, '%')))")
+    Page<FinancialRecord> searchRecords(
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 }

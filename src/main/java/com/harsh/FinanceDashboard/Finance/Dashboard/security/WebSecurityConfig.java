@@ -1,4 +1,5 @@
 package com.harsh.FinanceDashboard.Finance.Dashboard.security;
+import com.harsh.FinanceDashboard.Finance.Dashboard.config.RateLimitFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,15 +25,19 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     private final JWTAuthFilter jwtAuthFilter;
+
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
+
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   RateLimitFilter rateLimitFilter) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)  // add this
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
@@ -42,8 +47,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/users/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .exceptionHandling(exConfig->exConfig.accessDeniedHandler(accessDeniedHandler()));
-
+                .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler()));
 
         return httpSecurity.build();
     }

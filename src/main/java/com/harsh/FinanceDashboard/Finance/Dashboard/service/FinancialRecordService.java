@@ -87,4 +87,8 @@ public class FinancialRecordService {
                 .map(this::mapToResponseDTO)
                 .toList();
     }
+    public Page<FinancialRecordResponseDTO> searchRecords(String keyword, Pageable pageable) {
+        return financialRecordRepository.searchRecords(keyword, pageable)
+                .map(this::mapToResponseDTO);
+    }
 }
