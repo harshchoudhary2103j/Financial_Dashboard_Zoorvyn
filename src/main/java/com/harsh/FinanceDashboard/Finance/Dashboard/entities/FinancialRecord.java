@@ -13,6 +13,8 @@ import com.harsh.FinanceDashboard.Finance.Dashboard.enums.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class FinancialRecord {
 
     @Id
