@@ -105,7 +105,7 @@ src/main/java/com/harsh/FinanceDashboard/Finance/Dashboard/
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/finance-dashboard.git
+https://github.com/harshchoudhary2103j/Financial_Dashboard_Zoorvyn
 cd finance-dashboard
 ```
 
